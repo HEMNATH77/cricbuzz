@@ -21,7 +21,7 @@ HEADERS = {
 
 def connect_pymysql():
     return pymysql.connect(
-        host="localhost",
+        host="123.45.67.89",
         user="root",
         password="root",
         database="cricbuzzdb",
@@ -1026,6 +1026,7 @@ elif page == "Live Scores":
             else:
                 st.warning("No live score available yet.")
    
+
 
 
 
