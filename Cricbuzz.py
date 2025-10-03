@@ -3,6 +3,10 @@ import streamlit as st
 import pandas as pd
 import pymysql
 import requests
+import os
+from dotenv import load_dotenv
+
+from pymysql.err import OperationalError
 
 
 # API 
@@ -19,17 +23,27 @@ HEADERS = {
 
 # Database connection
 
-def connect_pymysql():
-    return pymysql.connect(
-        host="127.0.0.1",
-		port = 3306,
-        user="root",
-        password="root",
-        database="cricbuzzdb",
-        cursorclass=pymysql.cursors.DictCursor
-    )
+def create_connection():
+    """Create a database connection using PyMySQL and return the connection object."""
+    load_dotenv()
+    host = os.getenv("DB_HOST")
+    user = os.getenv("DB_USER")
+    password = os.getenv("DB_PASSWORD")
+    database = os.getenv("DB_NAME")
 
-
+    conn = None
+    try:
+        conn = pymysql.connect(
+            host=host,
+            user=user,
+            password=password,
+            database=database,
+            cursorclass=pymysql.cursors.DictCursor   # ✅ returns rows as dicts (good for pandas)
+        )
+        return conn
+    except OperationalError as e:
+        st.error(f"❌ Error connecting to MySQL database: {e}")
+        return None
 #Web App - streamlit
 
 
@@ -1027,6 +1041,7 @@ elif page == "Live Scores":
             else:
                 st.warning("No live score available yet.")
    
+
 
 
 
